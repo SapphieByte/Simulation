@@ -1,4 +1,4 @@
-import time, math
+import time, math, os, json
 import data as enum
 from Person import Person
 from Events import getEvent
@@ -77,7 +77,7 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
 
         sample_average_money /= len(sample_money_values)+1
 
-        graphdata[0].append(sample_employed)
+        graphdata[0].append(sample_employed/100)
         graphdata[1].append(sample_average_money)
         graphdata[2].append(len(sample)/100)
         graphdata[3].append(sample_total_people/100)
@@ -96,6 +96,25 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
 
     _Plot(graphdata)
 
-val = input("Genlimit, Sample Size, Lifespan = \n    :: ").replace(" ", "").split(",")
+    if input("Save data? (y/n)\n    :: ").lower() == "y":
+        with open(f"./saves/{math.floor(time.time())}.simsave", "w+") as f:
+            f.write("\{\"value\"=[data]\}".replace(graphdata))
 
-do(*[int(val[0]), int(val[1]), int(val[2])])
+
+string = input("What would you like to do? (simulate/open)\n    :: ")
+
+if string.lower() in ["simulate", "sim"]:
+    val = input("Genlimit, Sample Size, Lifespan = \n    :: ").replace(" ", "").split(",")
+    do(*[int(val[0]), int(val[1]), int(val[2])])
+elif string.lower() in ["open", "open file", "file"]:
+    files = [f for f in os.listdir("./saves") if f.endswith("simsave")]
+    if len(files) == 0:
+        print("Sorry! No Sim Files were found.")
+    else:
+        print(*files, sep="\n")
+
+        file_ = input("\nWhich file would you like to open?\n    :: ")
+        if file_ in files:
+            pass
+        else:
+            raise FileNotFoundError("Provided file doesn't exist.")

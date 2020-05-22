@@ -13,9 +13,7 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
     graphdata = [[], [], [], [], []] # [employed, average money, 100s of people, 100s of people all-time, 100s of people died all-time]
 
     sample = []
-    sample_is_dead = False
     sample_employed = 0
-    sample_unemployed = SAMPLE_SIZE
     sample_dead = 0
     sample_average_money = 0
     sample_money_values = []
@@ -97,9 +95,11 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
     _Plot(graphdata)
 
     if input("Save data? (y/n)\n    :: ").lower() == "y":
-        with open(f"./saves/{math.floor(time.time())}.simsave", "w+") as f:
-            f.write("\{\"value\"=[data]\}".replace(graphdata))
+        name = str(math.floor(time.time())) + ".simsave"
+        with open(f"./saves/{name}", "w+") as f:
+            f.write("{\"value\":data}".replace("data", str(graphdata)))
 
+        print(f"Successfully saved as {name}!")
 
 string = input("What would you like to do? (simulate/open)\n    :: ")
 
@@ -111,10 +111,16 @@ elif string.lower() in ["open", "open file", "file"]:
     if len(files) == 0:
         print("Sorry! No Sim Files were found.")
     else:
-        print(*files, sep="\n")
+        index = 0
+        for e in files:
+            index += 1
+            print(f"      > {e} [{str(index)}]")
 
-        file_ = input("\nWhich file would you like to open?\n    :: ")
-        if file_ in files:
-            pass
-        else:
-            raise FileNotFoundError("Provided file doesn't exist.")
+        file_ = input("\nWhich index would you like to open?\n    :: ")
+        
+        index = int(file_)-1
+
+        filepath = f"./saves/{files[index]}"
+
+        with open(filepath, "r") as f:
+            _Plot(json.loads(f.read())["value"])

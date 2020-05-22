@@ -16,7 +16,6 @@ class Person:
         self.Money = 0
         self.CanGetJob = True
         self.LastGenLostJob = False
-        self.CachedJob = None
 
         if random.randint(1, 100) < 40:
             self.CanBirth = False
@@ -34,12 +33,10 @@ class Person:
         if self.Trait == found["preference"][0]:
             if random.randint(1, found["preference"][1]) < found["preference"][1] and self.CanGetJob == True:
                 self.Job = r
-                self.CachedJob = self.Job
                 self.LastGenGotJob = True
         elif self.Trait != found["preference"][0]:
             if random.randint(1, found["preference"][2]) < found["preference"][2] and self.CanGetJob == True:
                 self.Job = r
-                self.CachedJob = self.Job
                 self.LastGenGotJob = True
     
     def work(self):
@@ -59,7 +56,6 @@ class Person:
         if self.Age >= target:
             self.Dead = True
             if self.Job != None:
-                self.CachedJob = self.Job
                 self.LastGenLostJob = True
 
         else:
@@ -110,7 +106,7 @@ class Person:
             else:
                 self.CanBirth = True
 
-            return random.randint(1, 2)
+            return random.randint(1, 3)
 
     def event(self, e):
         if random.randint(1, 100) <= random.choice(e):

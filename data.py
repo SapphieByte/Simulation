@@ -25,7 +25,7 @@ jobs = {
     "4": {
         "name": "thief",
         "preference": ["-1", 8, 8], # No preference
-        "pay": 28
+        "pay": 13
     },
     "5": {
         "name": "Electrician",

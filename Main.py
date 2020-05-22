@@ -20,7 +20,7 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
     sample_average_money = 0
     sample_money_values = []
     sample_total_people = SAMPLE_SIZE
-    sample_jobs = [[0], [0], [0], [0], [0], [0]]
+
 
     for i in range(SAMPLE_SIZE):
         sample.append([Person(LIFESPAN), i+1])
@@ -63,16 +63,12 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
 
             if i[0].LastGenGotJob == True:
                 sample_employed += 1
-                temp = sample_jobs[int(i[0].Job)-1]
-                sample_jobs[int(i[0].Job)-1].append(temp[len(temp)-1]+1)
                 i[0].LastGenGotJob = False
             elif i[0].LastGenLostJob == True:
                 sample_employed -= 1
                 if sample_employed < 0:
                     sample_employed = 0
 
-                temp = sample_jobs[int(i[0].CachedJob)-1]
-                sample_jobs[int(i[0].CachedJob)-1].append(temp[len(temp)-1]-1)
                 i[0].LastGenLostJob == False
 
 
@@ -94,14 +90,9 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN):
         if event == None:
             et = "None"
         else:
-            et = event[2]
+            et = f"{event[2]} ({gen_end_event-gen} loops remaining)"
 
         print(f"Gen {gen} took {ct}s (Spent {tt}s in total);\n    {sample_total_people} Spawned all-time, ({len(sample)} alive)\n    Current Event: {et}")
-
-    print(sample_jobs)
-
-    for t in sample_jobs:
-        graphdata.append(t)
 
     _Plot(graphdata)
 

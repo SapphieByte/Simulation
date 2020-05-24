@@ -4,6 +4,7 @@ from Person import Person
 from Events import getEvent
 from time import sleep as wait
 from Plot import plot as _Plot
+from inspect import signature
 
 def set_resp(e, v):
     tempv = {}
@@ -164,17 +165,24 @@ def do(genlimit, SAMPLE_SIZE, LIFESPAN, chance):
         handle()
     else:
         set_resp("Close", True)
+        reset_events()
+        reset_resp()
         sys.exit()
 
-reset_events()
-reset_resp()
-
 def handle():
+    reset_events()
+    reset_resp()
+
     string = input("What would you like to do? (simulate/open)\n    :: ")
 
     if string.lower() in ["simulate", "sim"]:
         val = input("Genlimit, Sample Size, Lifespan, %Chance of Event = \n    :: ").replace(" ", "").split(",")
-        do(*[int(val[0]), int(val[1]), int(val[2]), float(val[3])*10000000])
+        
+        if len(val) == len(signature(do).parameters):
+            do(*[int(val[0]), int(val[1]), int(val[2]), float(val[3])*10000000])
+        else:
+            print(f"{len(val)} Parameters provided, expected {len(signature(do).parameters)}!")
+            handle()
     elif string.lower() in ["open", "open file", "file"]:
         files = [f for f in os.listdir("./saves") if f.endswith("simsave")]
         if len(files) == 0:
@@ -200,4 +208,7 @@ def handle():
             if input("Continue? (y/n)\n    :: ").lower() == "y":
                 handle()
 
+    else:
+        print("Invalid response.")
+        handle()
 handle()
